@@ -133,6 +133,54 @@ exports.getBookById = async (req, res) => {
   }
 };
 
+exports.updateBook = async (req, res) => {
+  try {
+    const { id } = req.params; // book ID
+    let { isbn, title, author, genre, description } = req.body;
+
+    // Validate book ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid book ID" });
+    }
+
+    const book = await Book.findById(id);
+    if (!book) return res.status(404).json({ message: "Book not found" });
+
+    isbn = isbn?.trim();
+    title = title?.trim();
+    author = author?.trim();
+    genre = genre?.trim();
+    description = description?.trim();
+
+    // Validate ISBN format if provided
+    if (isbn && isbn !== book.isbn) {
+      const isbnRegex = /^\d{13}$/;
+      if (!isbnRegex.test(isbn)) {
+        return res.status(400).json({ message: "ISBN must be exactly 13 digits" });
+      }
+
+      const existingBook = await Book.findOne({ isbn });
+      if (existingBook) {
+        return res.status(400).json({ message: "ISBN already exists" });
+      }
+      book.isbn = isbn;
+    }
+
+    if (title) book.title = title;
+    if (author) book.author = author;
+    if (genre) book.genre = genre;
+    if (description) book.description = description;
+
+    await book.save();
+
+    res.json({ message: "Book updated successfully", book });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
 //Search query
 exports.searchBooks = async (req, res) => {
   try {

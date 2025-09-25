@@ -15,9 +15,13 @@ const options = {
         description: "Local server",
       },
       {
+        url: "https://book-review-api-6n3j.onrender.com", //live server
+        description: "Render server"
+      },
+      {
         url: "https://r4wz1z3f-3000.inc1.devtunnels.ms", // Remote dev tunnel
         description: "Remote dev tunnel",
-      },
+      }
     ],
     components: {
       securitySchemes: {
