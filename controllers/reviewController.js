@@ -132,7 +132,8 @@ exports.deleteReview = async (req, res) => {
     }
 
     const bookId = review.book;
-    await review.remove();
+    
+    await Review.deleteOne({ _id: id });
 
     // Update book stats
     const book = await Book.findById(bookId);
@@ -152,4 +153,3 @@ exports.deleteReview = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-

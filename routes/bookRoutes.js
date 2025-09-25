@@ -5,7 +5,8 @@ const {
   getBooks,
   getBookById,
   searchBooks,
-  updateBook
+  updateBook,
+  deleteBook
 } = require("../controllers/bookController");
 const { authenticateToken } = require("../middleware/authMiddleware");
 
@@ -234,5 +235,59 @@ router.get("/search/query", searchBooks);
  */
 router.put("/:id", authenticateToken, updateBook);
 
+/**
+ * @swagger
+ * /books/{id}:
+ *   delete:
+ *     summary: Delete a book by ID
+ *     description: Deletes a book and all its associated reviews. Requires authentication.
+ *     tags:
+ *       - Books
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the book to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Book and its reviews deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Book and its reviews deleted successfully"
+ *       400:
+ *         description: Invalid book ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid book ID"
+ *       401:
+ *         description: Unauthorized (missing or invalid token)
+ *       404:
+ *         description: Book not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Book not found"
+ *       500:
+ *         description: Server error
+ */
+router.delete("/:id", authenticateToken, deleteBook);
 
 module.exports = router;

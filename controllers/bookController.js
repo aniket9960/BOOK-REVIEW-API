@@ -237,8 +237,7 @@ exports.deleteBook = async (req, res) => {
     // Delete all reviews associated with this book
     await Review.deleteMany({ book: id });
 
-    // Delete the book
-    await book.remove();
+    await Book.deleteOne({ _id: id });
 
     res.json({ message: "Book and its reviews deleted successfully" });
   } catch (error) {
