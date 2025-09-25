@@ -1,7 +1,6 @@
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express"); 
 
-
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -10,7 +9,7 @@ const options = {
       version: "1.0.0",
       description: "API documentation for Book Review App", 
     },
-servers: [
+    servers: [
       {
         url: "http://localhost:3000", // Local development
         description: "Local server",
@@ -18,6 +17,20 @@ servers: [
       {
         url: "https://r4wz1z3f-3000.inc1.devtunnels.ms", // Remote dev tunnel
         description: "Remote dev tunnel",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
       },
     ],
   },
@@ -32,4 +45,3 @@ const swaggerDocs = (app) => {
 };
 
 module.exports = swaggerDocs;
-

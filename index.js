@@ -5,6 +5,8 @@ dotenv.config();
 const connectDB = require("./config/db");
 const swagger = require('./config/swagger')
 const authRoutes = require("./routes/auth");
+const bookRoutes = require("./routes/bookRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 connectDB();
 
@@ -15,6 +17,8 @@ app.use(express.json());
 
 
 app.use("/auth", authRoutes);
+app.use("/books", bookRoutes);
+app.use("/", reviewRoutes);
 
 
 swagger(app);
