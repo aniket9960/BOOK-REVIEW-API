@@ -5,6 +5,7 @@ const {
   getBooks,
   getBookById,
   searchBooks,
+  updateBook
 } = require("../controllers/bookController");
 const { authenticateToken } = require("../middleware/authMiddleware");
 
@@ -153,5 +154,85 @@ router.get("/:id", getBookById);
  *         description: Missing query parameter
  */
 router.get("/search/query", searchBooks);
+
+/**
+ * @swagger
+ * /books/{id}:
+ *   put:
+ *     summary: Update a book by ID
+ *     description: Updates the details of a book. Requires authentication.
+ *     tags:
+ *       - Books
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Book ID to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Fields to update (all optional)
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isbn:
+ *                 type: string
+ *                 example: "9781234567890"
+ *                 description: Must be exactly 13 digits
+ *               title:
+ *                 type: string
+ *                 example: "Harry Potter and the Goblet of Fire"
+ *               author:
+ *                 type: string
+ *                 example: "J.K. Rowling"
+ *               genre:
+ *                 type: string
+ *                 example: "Fantasy"
+ *               description:
+ *                 type: string
+ *                 example: "Fourth book in the Harry Potter series"
+ *     responses:
+ *       200:
+ *         description: Book updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Book updated successfully"
+ *                 book:
+ *                   $ref: '#/components/schemas/Book'
+ *       400:
+ *         description: Bad request (invalid ID, invalid ISBN, duplicate ISBN)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized (missing or invalid token)
+ *       404:
+ *         description: Book not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Server error
+ */
+router.put("/:id", authenticateToken, updateBook);
+
 
 module.exports = router;
