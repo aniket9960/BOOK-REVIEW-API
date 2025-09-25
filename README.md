@@ -13,10 +13,10 @@ The **Book Review REST API** is a backend service that powers book discovery and
 
 ## Features
 - **User Authentication**: Signup, login, refresh, and logout flows secured with JWT access and refresh tokens.
-- **Book Management**: Authenticated users can create new titles, list and inspect catalog entries, and delete obsolete records. (An update endpoint can be added following the existing controller patterns to complete full CRUD.)
-- **Review Management**: Authenticated readers can add, update, and delete reviews tied to specific books.
-- **Advanced Search**: Query titles, authors, and ISBNs with case-insensitive matching.
-- **Pagination**: Configurable page and limit parameters on collection endpoints to optimize client performance.
+- **Book Management**: Authenticated users can add/update books, fetch detailed information, and delete records.
+- **Review Management**: Authenticated users can add, update, and delete reviews for specific books, with one review per user per book enforced.
+- **Advanced Search**: Search books by title, author, or ISBN with case-insensitive, partial matching.
+- **Pagination**: All collection endpoints support configurable page and limit parameters to optimize performance and client experience.
 - **OpenAPI Reference**: Interactive Swagger UI hosted at `/api-docs` to explore schema details and execute sample requests.
 
 ## Setup Instructions
@@ -48,7 +48,6 @@ Create a `.env` file in the project root with the following values:
 | `MONGODB_URL` | MongoDB connection string (`MONGO_URI` alias can be added if desired) | `mongodb://127.0.0.1:27017/book_review_db` |
 | `JWT_SECRET`  | Secret key used to sign JWT access and refresh tokens            | `super-secure-secret`                 |
 
-> **Tip**: Keep secrets out of version control by using local environment files or secure secret stores.
 
 ## API Endpoints
 
@@ -107,7 +106,5 @@ curl -X POST "http://localhost:3000/books" \
 
 ## Notes
 - **Token Strategy**: Short-lived access tokens and longer-lived refresh tokens are both signed with the same `JWT_SECRET`. Keep this secret strong and private.
-- **Database URL Naming**: The code currently expects `MONGODB_URL`. If your deployment standard uses `MONGO_URI`, either add the alias in `db.js` or map it in your environment configuration.
-- **Book Update Endpoint**: The project presently covers create, read, and delete for books. Extending `bookController` with an update method and route is straightforward and follows the same validation patterns used for reviews.
 - **Validation**: Controllers provide defensive checks for pagination, ObjectId formats, and schema constraints. Adjust limits or error messages to match production requirements.
 - **Deployment**: Update the Swagger server list (`config/swagger.js`) with your deployment URL so documentation points to the correct environments.
